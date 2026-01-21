@@ -6,20 +6,40 @@ public class Iris {
 
     private static void printBox(String content) {
         System.out.print(LINE);
-        System.out.println(content);
+        System.out.print(content);
         System.out.print(LINE);
+    }
+
+    private static Task processTask(String inp) {
+        String[] parts = inp.split(" ");
+        Task ret;
+        if (parts[0].equals("todo")) {
+            String rest = inp.substring("todo".length()).trim();
+            ret = new Todo(rest);
+        } else if (parts[0].equals("deadline")) {
+            String rest = inp.substring("deadline".length()).trim();
+            String[] restSplit = rest.split("/by");
+            ret = new Deadline(restSplit[0].trim(), restSplit[1].trim());
+        } else {
+            String rest = inp.substring("event".length()).trim();
+            String[] restSplitFrom = rest.split("/from");
+            String[] restSplitTo = restSplitFrom[1].split("/to");
+            ret = new Event(restSplitFrom[0].trim(),
+                    restSplitTo[0].trim(),
+                    restSplitTo[1].trim());
+        }
+        return ret;
     }
 
     public static void main(String[] args) {
         String greetMsg =
                 "Hello! I'm Iris!\n"
-                + "What can I do for you?";
+                + "What can I do for you?\n";
         printBox(greetMsg);
 
         Scanner sc = new Scanner(System.in);
 
-        String[] taskList = new String[100];
-        Boolean[] doneList = new Boolean[100];
+        Task[] taskList = new Task[100];
         int index = 0;
         while (true) {
             String inp = sc.nextLine();
@@ -27,31 +47,32 @@ public class Iris {
             if (inp.equals("bye")) {
                 break;
             } else if (inp.equals("list")) {
-                System.out.print(LINE);
+                String listMsg = "Your tasks, printed:\n";
                 for (int i = 0; i < index; i++) {
-                    String markBox = doneList[i] ? "[X]" : "[ ]";
-                    System.out.println((i + 1) + ". " + markBox + " " + taskList[i]);
+                    listMsg += (i + 1) + "." + taskList[i].toString() + "\n";
                 }
-                System.out.print(LINE);
+                printBox(listMsg);
             } else if (parts[0].equals("mark")) {
-                System.out.print(LINE);
-                System.out.println("You have done the task. Good job!");
+                String markMsg = "You have done the task. Good job!\n";
                 int taskNum = Integer.parseInt(parts[1]);
-                doneList[taskNum - 1] = true;
-                System.out.println("[X] " + taskList[taskNum - 1]);
-                System.out.print(LINE);
+                Task task = taskList[taskNum - 1];
+                task.markDone();
+                markMsg += "  " + task + "\n";
+                printBox(markMsg);
             } else if (parts[0].equals("unmark")) {
-                System.out.print(LINE);
-                System.out.println("OK, I have marked it as not done.");
+                String unmarkMsg = "OK, I have marked it as not done.\n";
                 int taskNum = Integer.parseInt(parts[1]);
-                doneList[taskNum - 1] = false;
-                System.out.println("[ ] " + taskList[taskNum - 1]);
-                System.out.print(LINE);
+                Task task = taskList[taskNum - 1];
+                task.markUndone();
+                unmarkMsg += "  " + task + "\n";
+                printBox(unmarkMsg);
             } else {
-                taskList[index] = inp;
-                doneList[index] = false;
+                Task newTask = processTask(inp);
+                taskList[index] = newTask;
                 index += 1;
-                System.out.print(LINE + "added: " + inp + "\n" + LINE);
+                String addMessage = "Okay. I've added this task:\n  " + newTask
+                        + "\nNow you have " + index + " tasks in the list.\n";
+                printBox(addMessage);
             }
         }
         String exitMsg = "Bye. Hope to see you again soon!\n"
