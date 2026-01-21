@@ -1,16 +1,20 @@
 import java.util.Scanner;
 
 public class Iris {
-    public static void main(String[] args) {
-        String message = "";
-        String LINE = "________________________" +
-                "____________________________________\n";
-        message += LINE;
-        message += "Hello! I'm Iris!\n";
-        message += "What can I do for you?\n";
-        message += LINE;
+    static String LINE = "________________________" +
+            "____________________________________\n";
 
-        System.out.print(message);
+    private static void printBox(String content) {
+        System.out.print(LINE);
+        System.out.println(content);
+        System.out.print(LINE);
+    }
+
+    public static void main(String[] args) {
+        String greetMsg =
+                "Hello! I'm Iris!\n"
+                + "What can I do for you?";
+        printBox(greetMsg);
 
         Scanner sc = new Scanner(System.in);
 
