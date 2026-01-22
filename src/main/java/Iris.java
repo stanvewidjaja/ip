@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Iris {
     static String LINE = "________________________" +
@@ -58,7 +59,7 @@ public class Iris {
         return ret;
     }
 
-    private static int processInput(String inp, Task[] taskList, int index) throws IrisException {
+    private static void processInput(String inp, ArrayList<Task> taskList) throws IrisException {
         String[] parts = inp.split(" ");
         String command = parts[0];
         boolean isTaskCommand = command.equals("todo")
@@ -66,10 +67,28 @@ public class Iris {
                 || command.equals("event");
         if (inp.equals("list")) {
             String listMsg = "Your tasks, printed:\n";
-            for (int i = 0; i < index; i++) {
-                listMsg += (i + 1) + "." + taskList[i].toString() + "\n";
+            for (int i = 0; i < taskList.size(); i++) {
+                listMsg += (i + 1) + "." + taskList.get(i).toString() + "\n";
             }
             printBox(listMsg);
+        } else if (parts[0].equals("delete")) {
+            String deleteMsg = "Noted. I have removed this task:\n";
+            if (parts.length < 2) {
+                throw new IrisException("Please specify a task number to delete, e.g. delete 3");
+            }
+            int taskNum;
+            try {
+                taskNum = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException nfe) {
+                throw new IrisException("Task number must be a number. You put " + parts[1] + " after mark.");
+            }
+            if (taskNum < 1 || taskNum > taskList.size()) {
+                throw new IrisException("Task number must be between 1 and " + taskList.size() + ".");
+            }
+            Task task = taskList.remove(taskNum - 1);
+            deleteMsg += "  " + task + "\n"
+                    + "Now you have " + taskList.size() + " tasks in the list.\n";
+            printBox(deleteMsg);
         } else if (parts[0].equals("mark")) {
             String markMsg = "You have done the task. Good job!\n";
             if (parts.length < 2) {
@@ -81,10 +100,10 @@ public class Iris {
             } catch (NumberFormatException nfe) {
                 throw new IrisException("Task number must be a number. You put " + parts[1] + " after mark.");
             }
-            if (taskNum < 1 || taskNum > index) {
-                throw new IrisException("Task number must be between 1 and " + index + ".");
+            if (taskNum < 1 || taskNum > taskList.size()) {
+                throw new IrisException("Task number must be between 1 and " + taskList.size() + ".");
             }
-            Task task = taskList[taskNum - 1];
+            Task task = taskList.get(taskNum - 1);
             task.markDone();
             markMsg += "  " + task + "\n";
             printBox(markMsg);
@@ -99,24 +118,22 @@ public class Iris {
             } catch (NumberFormatException nfe) {
                 throw new IrisException("Task number must be a number. You put " + parts[1] + " after mark.");
             }
-            if (taskNum < 1 || taskNum > index) {
-                throw new IrisException("Task number must be between 1 and " + index + ".");
+            if (taskNum < 1 || taskNum > taskList.size()) {
+                throw new IrisException("Task number must be between 1 and " + taskList.size() + ".");
             }
-            Task task = taskList[taskNum - 1];
+            Task task = taskList.get(taskNum - 1);
             task.markUndone();
             unmarkMsg += "  " + task + "\n";
             printBox(unmarkMsg);
         } else if (isTaskCommand) {
             Task newTask = processTask(inp);
-            taskList[index] = newTask;
-            index += 1;
+            taskList.add(newTask);
             String addMessage = "Okay. I've added this task:\n  " + newTask
-                    + "\nNow you have " + index + " tasks in the list.\n";
+                    + "\nNow you have " + taskList.size() + " tasks in the list.\n";
             printBox(addMessage);
         } else {
             throw new IrisException("I don't recognize that command.");
         }
-        return index;
     }
 
     public static void main(String[] args) {
@@ -127,15 +144,15 @@ public class Iris {
 
         Scanner sc = new Scanner(System.in);
 
-        Task[] taskList = new Task[100];
-        int index = 0;
+
+        ArrayList<Task> taskList = new ArrayList<>();
         while (true) {
             String inp = sc.nextLine();
             if (inp.equals("bye")) {
                 break;
             }
             try {
-                index = processInput(inp, taskList, index);
+                processInput(inp, taskList);
             } catch (IrisException ie) {
                 printBox(ie.getMessage() + "\n");
             }
