@@ -1,17 +1,22 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
 
 public class Iris {
     static String LINE = "________________________" +
             "____________________________________\n";
 
-    private static void printBox(String content) {
+    private void printBox(String content) {
         System.out.print(LINE);
         System.out.print(content);
         System.out.print(LINE);
     }
 
-    private static Task processTask(String inp) throws IrisException {
+    private Task processTask(String inp) throws IrisException {
         String[] parts = inp.split(" ");
         Task ret;
         boolean isComponentMissing;
@@ -59,7 +64,7 @@ public class Iris {
         return ret;
     }
 
-    private static void processInput(String inp, ArrayList<Task> taskList) throws IrisException {
+    private void processInput(String inp, ArrayList<Task> taskList) throws IrisException {
         String[] parts = inp.split(" ");
         String command = parts[0];
         boolean isTaskCommand = command.equals("todo")
@@ -89,6 +94,7 @@ public class Iris {
             deleteMsg += "  " + task + "\n"
                     + "Now you have " + taskList.size() + " tasks in the list.\n";
             printBox(deleteMsg);
+            saveTasksToFile(taskList);
         } else if (parts[0].equals("mark")) {
             String markMsg = "You have done the task. Good job!\n";
             if (parts.length < 2) {
@@ -107,6 +113,7 @@ public class Iris {
             task.markDone();
             markMsg += "  " + task + "\n";
             printBox(markMsg);
+            saveTasksToFile(taskList);
         } else if (parts[0].equals("unmark")) {
             String unmarkMsg = "OK, I have marked it as not done.\n";
             if (parts.length < 2) {
@@ -125,36 +132,125 @@ public class Iris {
             task.markUndone();
             unmarkMsg += "  " + task + "\n";
             printBox(unmarkMsg);
+            saveTasksToFile(taskList);
         } else if (isTaskCommand) {
             Task newTask = processTask(inp);
             taskList.add(newTask);
             String addMessage = "Okay. I've added this task:\n  " + newTask
                     + "\nNow you have " + taskList.size() + " tasks in the list.\n";
             printBox(addMessage);
+            saveTasksToFile(taskList);
         } else {
             throw new IrisException("I don't recognize that command.");
         }
     }
 
+    private static final String DATA_DIR = "data";
+    private static final String DATA_FILE = "data/taskdata.txt";
+
+    private void ensureDataFileExists() {
+        File dir = new File(DATA_DIR);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        File file = new File(DATA_FILE);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating data file");
+        }
+    }
+
+    private Task buildTaskFromLine(String line) throws Exception {
+        String[] parts = line.split("\\|");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
+        }
+
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1");
+
+        Task task;
+
+        if (type.equals("T")) {
+            task = new Todo(parts[2]);
+        } else if (type.equals("D")) {
+            task = new Deadline(parts[2], parts[3]);
+        } else if (type.equals("E")) {
+            task = new Event(parts[2], parts[3], parts[4]);
+        } else {
+            throw new Exception("Unknown task type");
+        }
+
+        if (isDone) {
+            task.markDone();
+        }
+
+        return task;
+    }
+
+
+    private ArrayList<Task> readTasksFromFile() {
+        ArrayList<Task> taskList = new ArrayList<Task>();
+
+        File file = new File(DATA_FILE);
+        if (!file.exists()) {
+            return taskList;
+        }
+
+        try (Scanner sc = new Scanner(file)) {
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                try {
+                    Task task = buildTaskFromLine(line);
+                    taskList.add(task);
+                } catch (Exception e) {
+                    System.out.println("WARNING: " + e.getMessage() + ", skipped task " + line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // treat as empty list
+        }
+
+        return taskList;
+    }
+
+    private static void saveTasksToFile(ArrayList<Task> taskList) {
+        File file = new File(DATA_FILE);
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            for (Task task : taskList) {
+                writer.println(task.toFileString());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
+        Iris iris = new Iris();
+        iris.ensureDataFileExists();
+
         String greetMsg =
                 "Hello! I'm Iris!\n"
                 + "What can I do for you?\n";
-        printBox(greetMsg);
+        iris.printBox(greetMsg);
 
         Scanner sc = new Scanner(System.in);
 
-
-        ArrayList<Task> taskList = new ArrayList<>();
+        ArrayList<Task> taskList = iris.readTasksFromFile();
         while (true) {
             String inp = sc.nextLine();
             if (inp.equals("bye")) {
                 break;
             }
             try {
-                processInput(inp, taskList);
+                iris.processInput(inp, taskList);
             } catch (IrisException ie) {
-                printBox(ie.getMessage() + "\n");
+                iris.printBox(ie.getMessage() + "\n");
             }
         }
         String exitMsg = "Bye. Hope to see you again soon!\n"
