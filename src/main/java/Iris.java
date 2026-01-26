@@ -1,5 +1,7 @@
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
 
 public class Iris {
     static String LINE = "________________________" +
@@ -136,11 +138,33 @@ public class Iris {
         }
     }
 
+    private static final String DATA_DIR = "data";
+    private static final String DATA_FILE = "data/taskdata.txt";
+
+    private void ensureDataFileExists() {
+        File dir = new File(DATA_DIR);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        File file = new File(DATA_FILE);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating data file");
+        }
+    }
+
     public static void main(String[] args) {
         String greetMsg =
                 "Hello! I'm Iris!\n"
                 + "What can I do for you?\n";
         printBox(greetMsg);
+
+        Iris iris = new Iris();
+        iris.ensureDataFileExists();
 
         Scanner sc = new Scanner(System.in);
 
