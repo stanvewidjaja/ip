@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Ui {
     static String LINE = "________________________" +
             "____________________________________\n";
@@ -10,7 +8,7 @@ public class Ui {
         System.out.print(LINE);
     }
 
-    public static void showTaskList(ArrayList<Task> taskList) {
+    public static void showTaskList(TaskList taskList) {
         String listMsg = "Your tasks, printed:\n";
         for (int i = 0; i < taskList.size(); i++) {
             listMsg += (i + 1) + "." + taskList.get(i) + "\n";
@@ -18,7 +16,7 @@ public class Ui {
         showBox(listMsg);
     }
 
-    public static void showDeleteTask(Task task, ArrayList<Task> taskList) {
+    public static void showDeleteTask(Task task, TaskList taskList) {
         String deleteMsg = "Noted. I have removed this task:\n";
         deleteMsg += "  " + task + "\n"
                 + "Now you have " + taskList.size() + " tasks in the list.\n";
@@ -37,7 +35,7 @@ public class Ui {
         showBox(unmarkMsg);
     }
 
-    public static void showNewTask(Task task, ArrayList<Task> taskList) {
+    public static void showNewTask(Task task, TaskList taskList) {
         String addMessage = "Okay. I've added this task:\n  " + task
                 + "\nNow you have " + taskList.size() + " tasks in the list.\n";
         showBox(addMessage);

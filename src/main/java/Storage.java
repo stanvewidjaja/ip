@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
@@ -56,8 +55,8 @@ public class Storage {
     }
 
 
-    public static ArrayList<Task> readTasksFromFile() {
-        ArrayList<Task> taskList = new ArrayList<Task>();
+    public static TaskList readTasksFromFile() {
+        TaskList taskList = new TaskList();
 
         File file = new File(DATA_FILE);
         if (!file.exists()) {
@@ -81,12 +80,12 @@ public class Storage {
         return taskList;
     }
 
-    public static void saveTasksToFile(ArrayList<Task> taskList) {
+    public static void saveTasksToFile(TaskList taskList) {
         File file = new File(DATA_FILE);
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            for (Task task : taskList) {
-                writer.println(task.toFileString());
+            for (int i = 0; i < taskList.size(); i++) {
+                writer.println(taskList.get(i).toFileString());
             }
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
