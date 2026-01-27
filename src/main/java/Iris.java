@@ -1,10 +1,12 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Iris {
     static String LINE = "________________________" +
@@ -38,7 +40,7 @@ public class Iris {
             if (isComponentMissing) {
                 throw new IrisException("Both deadline description and due date cannot be empty.");
             }
-            ret = new Deadline(restSplit[0].trim(), restSplit[1].trim());
+            ret = new Deadline(restSplit[0].trim(), LocalDate.parse(restSplit[1].trim()));
         } else {
             String rest = inp.substring("event".length());
             String[] restSplitFrom = rest.split("/from");
@@ -58,8 +60,8 @@ public class Iris {
                         "cannot be empty.");
             }
             ret = new Event(restSplitFrom[0].trim(),
-                    restSplitTo[0].trim(),
-                    restSplitTo[1].trim());
+                    LocalDate.parse(restSplitTo[0].trim()),
+                    LocalDate.parse(restSplitTo[1].trim()));
         }
         return ret;
     }
@@ -178,9 +180,9 @@ public class Iris {
         if (type.equals("T")) {
             task = new Todo(parts[2]);
         } else if (type.equals("D")) {
-            task = new Deadline(parts[2], parts[3]);
+            task = new Deadline(parts[2], LocalDate.parse(parts[3]));
         } else if (type.equals("E")) {
-            task = new Event(parts[2], parts[3], parts[4]);
+            task = new Event(parts[2], LocalDate.parse(parts[3]), LocalDate.parse(parts[4]));
         } else {
             throw new Exception("Unknown task type");
         }
