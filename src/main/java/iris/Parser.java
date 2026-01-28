@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Parser {
     public static Task processTask(String inp) throws IrisException {
-        String[] parts = inp.split(" ");
+        String[] parts = inp.trim().split(" ");
         Task ret;
         boolean isComponentMissing;
         if (parts[0].equals("todo")) {
