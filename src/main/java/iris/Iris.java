@@ -1,3 +1,5 @@
+package iris;
+
 import java.util.Scanner;
 
 public class Iris {

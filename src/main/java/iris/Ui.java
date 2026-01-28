@@ -1,3 +1,5 @@
+package iris;
+
 public class Ui {
     static String LINE = "________________________" +
             "____________________________________\n";
