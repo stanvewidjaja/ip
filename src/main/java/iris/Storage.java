@@ -8,10 +8,18 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+/**
+ * Handles all I/O processes.
+ * Ensures a data file exists, reconstructs taskList from the data file,
+ * and writes to it.
+ */
 public class Storage {
     private static final String DATA_DIR = "data";
     private static final String DATA_FILE = "data/taskdata.txt";
 
+    /**
+     * Checks if data file exists. If not, create it.
+     */
     public static void ensureDataFileExists() {
         File dir = new File(DATA_DIR);
         if (!dir.exists()) {
@@ -56,7 +64,13 @@ public class Storage {
         return task;
     }
 
-
+    /**
+     * Reconstructs the TaskList wrapper of ArrayList<Task>
+     * from data file.
+     * Skips corrupted lines.
+     *
+     * @return TaskList containing all reconstructed tasks.
+     */
     public static TaskList readTasksFromFile() {
         TaskList taskList = new TaskList();
 
@@ -82,6 +96,11 @@ public class Storage {
         return taskList;
     }
 
+    /**
+     * Writes TaskList to the data file. Saves data externally.
+     *
+     * @param taskList The wrapper TaskList.
+     */
     public static void saveTasksToFile(TaskList taskList) {
         File file = new File(DATA_FILE);
 

@@ -2,7 +2,18 @@ package iris;
 
 import java.time.LocalDate;
 
+/**
+ * Handles parsing of user input commands, tasks, and indices.
+ * Passes output to be managed by execution system.
+ */
 public class Parser {
+    /**
+     * Creates task from user input after parsing user input.
+     *
+     * @param inp user input string
+     * @return the created Task
+     * @throws IrisException if the input is invalid
+     */
     public static Task processTask(String inp) throws IrisException {
         String[] parts = inp.trim().split(" ");
         Task ret;
@@ -51,6 +62,15 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Parses the second user input into an integer.
+     * Only called if the command modifies or deletes tasks.
+     *
+     * @param inp the user input
+     * @param taskList the list of tasks, a wrapper for ArrayList<Task>
+     * @return index, 0-indexed
+     * @throws IrisException if task number is empty, or invalid second argument
+     */
     public static int parseIndexOrThrow(String inp, TaskList taskList) throws IrisException {
         inp = inp.trim();
         String[] parts = inp.split("\\s+");
@@ -82,6 +102,14 @@ public class Parser {
         return taskNum - 1;
     }
 
+    /**
+     * Parses the first component of user input.
+     * The execution handles the logic.
+     *
+     * @param inp the user input
+     * @return a string that represents command type
+     */
+
     public static String getCommand(String inp) {
         inp = inp.trim();
         if (inp.isEmpty()) {
@@ -89,6 +117,13 @@ public class Parser {
         }
         return inp.split("\\s+")[0];
     }
+
+    /**
+     * Parses if a given command is of Task creation.
+     *
+     * @param command the user command
+     * @return boolean that indicates if this is a Task creation
+     */
 
     public static boolean isTaskCreationCommand(String command) {
         return command.equals("todo")
