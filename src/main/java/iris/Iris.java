@@ -2,6 +2,11 @@ package iris;
 
 import java.util.Scanner;
 
+/**
+ * Our main class.
+ * It handles execution (for now), and contains the entry point
+ * into the program.
+ */
 public class Iris {
     private static void processInput(String inp, TaskList taskList) throws IrisException {
         String command = Parser.getCommand(inp);
