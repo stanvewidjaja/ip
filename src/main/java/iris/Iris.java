@@ -14,6 +14,10 @@ public class Iris {
 
         if (command.equals("list")) {
             Ui.showTaskList(taskList);
+        } else if (command.equals("find")) {
+            String keyword = Parser.parseFindKeywordOrThrow(inp);
+            TaskList found = taskList.findByKeyword(keyword);
+            Ui.showFoundTasksList(found);
         } else if (command.equals("delete")) {
             int index = Parser.parseIndexOrThrow(inp, taskList);
             Task task = taskList.remove(index);

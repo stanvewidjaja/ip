@@ -112,4 +112,22 @@ public class Ui {
                 + LINE;
         System.out.print(exitMsg);
     }
+
+    /**
+     * Prints found tasks in a "found" TaskList
+     * that contains tasks with a certain keyword.
+     *
+     * @param found TaskList containing tasks with a keyword
+     */
+    public static void showFoundTasksList(TaskList found) {
+        if (found.size() == 0) {
+            showBox("(No matching tasks found)");
+        }
+
+        String foundMsg = "Here are the matching tasks in your list:\n";
+        for (int i = 0; i < found.size(); i++) {
+            foundMsg += (i + 1) + "." + found.get(i) + "\n";
+        }
+        showBox(foundMsg);
+    }
 }
