@@ -48,7 +48,6 @@ public class Iris {
         Ui.showGreetMsg();
 
         Scanner sc = new Scanner(System.in);
-
         TaskList taskList = Storage.readTasksFromFile();
         while (true) {
             String inp = sc.nextLine();
