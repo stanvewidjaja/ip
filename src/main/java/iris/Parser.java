@@ -96,4 +96,19 @@ public class Parser {
                 || command.equals("event");
     }
 
+    /**
+     * Extracts keyword from find commands. Returns
+     * everything after the "find" clause.
+     *
+     * @param inp the user input
+     * @return keyword string
+     * @throws IrisException IrisException to be thrown if user input is empty
+     */
+    public static String parseFindKeywordOrThrow(String inp) throws IrisException {
+        String keyword = inp.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new IrisException("Please provide a keyword to find, e.g. find book");
+        }
+        return keyword;
+    }
 }

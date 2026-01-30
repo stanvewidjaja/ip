@@ -21,6 +21,10 @@ public class Task {
         return (isDone ? "[X] " : "[ ] ") + description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String toFileString() {
         return (isDone ? "1" : "0") + " | " + description;
     }
