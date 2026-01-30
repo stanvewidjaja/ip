@@ -3,20 +3,30 @@ package iris;
 import java.time.LocalDate;
 
 public class Parser {
+    private static final String TODO = "todo";
+    private static final String DEADLINE = "deadline";
+    private static final String EVENT = "event";
+    private static final String BY_SEPARATOR = "/by";
+    private static final String FROM_SEPARATOR = "/from";
+    private static final String TO_SEPARATOR = "/to";
+    private static final String DELETE = "delete";
+    private static final String MARK = "mark";
+    private static final String UNMARK = "unmark";
+
     public static Task processTask(String inp) throws IrisException {
-        String[] parts = inp.trim().split(" ");
+        String[] parts = inp.trim().split("\\s+");
         Task ret;
         boolean isComponentMissing;
-        if (parts[0].equals("todo")) {
-            String rest = inp.substring("todo".length()).trim();
+        if (parts[0].equals(TODO)) {
+            String rest = inp.substring(TODO.length()).trim();
             isComponentMissing = rest.isEmpty();
             if (isComponentMissing) {
                 throw new IrisException("Todo description cannot be empty.");
             }
             ret = new Todo(rest);
-        } else if (parts[0].equals("deadline")) {
-            String rest = inp.substring("deadline".length());
-            String[] restSplit = rest.split("/by");
+        } else if (parts[0].equals(DEADLINE)) {
+            String rest = inp.substring(DEADLINE.length());
+            String[] restSplit = rest.split(BY_SEPARATOR);
             if (restSplit.length < 2) {
                 throw new IrisException("Deadline task must have a /by and a deadline after that.");
             }
@@ -26,13 +36,13 @@ public class Parser {
                 throw new IrisException("Both deadline description and due date cannot be empty.");
             }
             ret = new Deadline(restSplit[0].trim(), LocalDate.parse(restSplit[1].trim()));
-        } else {
-            String rest = inp.substring("event".length());
-            String[] restSplitFrom = rest.split("/from");
+        } else if (parts[0].equals(EVENT)){
+            String rest = inp.substring(EVENT.length());
+            String[] restSplitFrom = rest.split(FROM_SEPARATOR);
             if (restSplitFrom.length < 2) {
                 throw new IrisException("Event task must have a /from and a beginning time.");
             }
-            String[] restSplitTo = restSplitFrom[1].split("/to");
+            String[] restSplitTo = restSplitFrom[1].split(TO_SEPARATOR);
             if (restSplitTo.length < 2) {
                 throw new IrisException("Event task must have a /to and an ending time.");
             }
@@ -47,6 +57,8 @@ public class Parser {
             ret = new Event(restSplitFrom[0].trim(),
                     LocalDate.parse(restSplitTo[0].trim()),
                     LocalDate.parse(restSplitTo[1].trim()));
+        } else {
+            throw new IrisException("Unknown task type: " + parts[0]);
         }
         return ret;
     }
@@ -56,25 +68,21 @@ public class Parser {
         String[] parts = inp.split("\\s+");
         boolean isInputMissingArgument = (parts.length < 2);
         String command = parts[0];
-        if (isInputMissingArgument && command.equals("delete")) {
+        if (isInputMissingArgument && command.equals(DELETE)) {
             throw new IrisException("Please specify a task number to delete, e.g. delete 3");
-        } else if (isInputMissingArgument && command.equals("mark")) {
+        } else if (isInputMissingArgument && command.equals(MARK)) {
             throw new IrisException("Please specify a task number to mark, e.g. mark 2");
-        } else if (isInputMissingArgument && command.equals("unmark")) {
-            throw new IrisException("Please specify a task number to mark, e.g. unmark 2");
+        } else if (isInputMissingArgument && command.equals(UNMARK)) {
+            throw new IrisException("Please specify a task number to unmark, e.g. unmark 2");
         }
-        return parseIntFromIndexCommand(inp, taskList);
-    }
 
-    private static int parseIntFromIndexCommand(String inp, TaskList taskList) throws IrisException {
-        inp = inp.trim();
-        String intAsString = inp.split("\\s+")[1];
-
+        String intAsString = parts[1];
         int taskNum;
         try {
             taskNum = Integer.parseInt(intAsString);
         } catch (NumberFormatException nfe) {
-            throw new IrisException("Task number must be a number. You put " + intAsString + " after mark.");
+            throw new IrisException("Task number must be a number. " +
+                    "You put " + intAsString + " after " + command + ".");
         }
         if (taskNum < 1 || taskNum > taskList.size()) {
             throw new IrisException("Task number must be between 1 and " + taskList.size() + ".");
@@ -91,9 +99,9 @@ public class Parser {
     }
 
     public static boolean isTaskCreationCommand(String command) {
-        return command.equals("todo")
-                || command.equals("deadline")
-                || command.equals("event");
+        return command.equals(TODO)
+                || command.equals(DEADLINE)
+                || command.equals(EVENT);
     }
 
 }

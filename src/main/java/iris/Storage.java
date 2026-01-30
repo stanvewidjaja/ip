@@ -11,6 +11,10 @@ import java.util.Scanner;
 public class Storage {
     private static final String DATA_DIR = "data";
     private static final String DATA_FILE = "data/taskdata.txt";
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String DONE_FLAG = "1";
 
     public static void ensureDataFileExists() {
         File dir = new File(DATA_DIR);
@@ -28,25 +32,25 @@ public class Storage {
         }
     }
 
-    private static Task buildTaskFromLine(String line) throws Exception {
+    private static Task buildTaskFromLine(String line) throws IrisException {
         String[] parts = line.split("\\|");
         for (int i = 0; i < parts.length; i++) {
             parts[i] = parts[i].trim();
         }
 
         String type = parts[0];
-        boolean isDone = parts[1].equals("1");
+        boolean isDone = parts[1].equals(DONE_FLAG);
 
         Task task;
 
-        if (type.equals("T")) {
+        if (type.equals(TODO_TYPE)) {
             task = new Todo(parts[2]);
-        } else if (type.equals("D")) {
+        } else if (type.equals(DEADLINE_TYPE)) {
             task = new Deadline(parts[2], LocalDate.parse(parts[3]));
-        } else if (type.equals("E")) {
+        } else if (type.equals(EVENT_TYPE)) {
             task = new Event(parts[2], LocalDate.parse(parts[3]), LocalDate.parse(parts[4]));
         } else {
-            throw new Exception("Unknown task type");
+            throw new IrisException("WARNING: Unknown task type, skipped task " + line);
         }
 
         if (isDone) {
@@ -58,6 +62,7 @@ public class Storage {
 
 
     public static TaskList readTasksFromFile() {
+        ensureDataFileExists();
         TaskList taskList = new TaskList();
 
         File file = new File(DATA_FILE);
@@ -71,8 +76,8 @@ public class Storage {
                 try {
                     Task task = buildTaskFromLine(line);
                     taskList.add(task);
-                } catch (Exception e) {
-                    System.out.println("WARNING: " + e.getMessage() + ", skipped task " + line);
+                } catch (IrisException ie) {
+                    Ui.showIrisExceptionWithoutBox(ie);
                 }
             }
         } catch (FileNotFoundException e) {

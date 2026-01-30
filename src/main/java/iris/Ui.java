@@ -53,6 +53,10 @@ public class Ui {
         showBox(ie.getMessage() + "\n");
     }
 
+    public static void showIrisExceptionWithoutBox(IrisException ie) {
+        System.out.println(ie.getMessage());
+    }
+
     public static void showExitMsg() {
         String exitMsg = "Bye. Hope to see you again soon!\n"
                 + LINE;
