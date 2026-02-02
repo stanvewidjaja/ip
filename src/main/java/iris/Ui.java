@@ -2,97 +2,53 @@ package iris;
 
 /**
  * An abstraction to help formatting output.
- * Prints error messages, changes to tasks, and
+ * Returns error messages, changes to tasks, and
  * tasks in TaskList.
- * Also formats them into boxes.
+ *
+ * Returns Strings to be passed to the GUI.
  */
 public class Ui {
-    static String LINE = "________________________" +
-            "____________________________________\n";
-
-    private static void showBox(String content) {
-        System.out.print(LINE);
-        System.out.print(content);
-        System.out.print(LINE);
-    }
-
-    /**
-     * Prints all Tasks in TaskList.
-     *
-     * @param taskList Wrapper for ArrayList of Tasks
-     */
-    public static void showTaskList(TaskList taskList) {
+    public static String renderTaskList(TaskList taskList) {
         String listMsg = "Your tasks, printed:\n";
         for (int i = 0; i < taskList.size(); i++) {
             listMsg += (i + 1) + "." + taskList.get(i) + "\n";
         }
-        showBox(listMsg);
+        return listMsg;
     }
 
-    /**
-     * Prints a deleted Task.
-     *
-     * @param task deleted task
-     * @param taskList TaskList with one task deleted
-     */
-    public static void showDeleteTask(Task task, TaskList taskList) {
+    public static String renderDeleteTask(Task task, TaskList taskList) {
         String deleteMsg = "Noted. I have removed this task:\n";
         deleteMsg += "  " + task + "\n"
                 + "Now you have " + taskList.size() + " tasks in the list.\n";
-        showBox(deleteMsg);
+        return deleteMsg;
     }
 
-    /**
-     * Prints a marked Task.
-     *
-     * @param task marked task
-     */
-    public static void showMarkTask(Task task) {
+    public static String renderMarkTask(Task task) {
         String markMsg = "You have done the task. Good job!\n";
         markMsg += "  " + task + "\n";
-        showBox(markMsg);
+        return markMsg;
     }
 
-    /**
-     * Prints an unmarked Task.
-     *
-     * @param task unmarked task
-     */
-    public static void showUnmarkTask(Task task) {
+    public static String renderUnmarkTask(Task task) {
         String unmarkMsg = "OK, I have marked it as not done.\n";
         unmarkMsg += "  " + task + "\n";
-        showBox(unmarkMsg);
+        return unmarkMsg;
     }
 
-    /**
-     * Prints a task that was just added.
-     *
-     * @param task added task
-     * @param taskList TaskList with one added task
-     */
-    public static void showNewTask(Task task, TaskList taskList) {
+    public static String renderNewTask(Task task, TaskList taskList) {
         String addMessage = "Okay. I've added this task:\n  " + task
                 + "\nNow you have " + taskList.size() + " tasks in the list.\n";
-        showBox(addMessage);
+        return addMessage;
     }
 
-    /**
-     * Prints the greeting message.
-     */
-    public static void showGreetMsg() {
+    public static String renderGreetMsg() {
         String greetMsg =
                 "Hello! I'm Iris!\nWhat can I do for you?\n";
-        showBox(greetMsg);
+        return greetMsg;
     }
 
-    /**
-     * Prints an IrisException: an Exception due to a mismatched
-     * user input.
-     *
-     * @param ie IrisException that is passed and caught
-     */
-    public static void showIrisException(IrisException ie) {
-        showBox(ie.getMessage() + "\n");
+    public static String renderIrisException(IrisException ie) {
+        return "IrisException: " + ie.getMessage() + "\n";
     }
 
     /**
@@ -104,30 +60,19 @@ public class Ui {
         System.out.println(ie.getMessage());
     }
 
-    /**
-     * Prints the exit message.
-     */
-    public static void showExitMsg() {
-        String exitMsg = "Bye. Hope to see you again soon!\n"
-                + LINE;
-        System.out.print(exitMsg);
+    public static String renderExitMsg() {
+        return "Bye. Hope to see you again soon!";
     }
 
-    /**
-     * Prints found tasks in a "found" TaskList
-     * that contains tasks with a certain keyword.
-     *
-     * @param found TaskList containing tasks with a keyword
-     */
-    public static void showFoundTasksList(TaskList found) {
+    public static String renderFoundTasksList(TaskList found) {
         if (found.size() == 0) {
-            showBox("(No matching tasks found)");
+            return "(No matching tasks found)\n";
         }
 
         String foundMsg = "Here are the matching tasks in your list:\n";
         for (int i = 0; i < found.size(); i++) {
             foundMsg += (i + 1) + "." + found.get(i) + "\n";
         }
-        showBox(foundMsg);
+        return foundMsg;
     }
 }

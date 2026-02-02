@@ -8,38 +8,42 @@ import java.util.Scanner;
  * into the program.
  */
 public class Iris {
-    private static void processInput(String inp, TaskList taskList) throws IrisException {
+    private TaskList taskList;
+
+    private static String processInput(String inp, TaskList taskList) throws IrisException {
         String command = Parser.getCommand(inp);
         boolean isTaskCommand = Parser.isTaskCreationCommand(command);
 
-        if (command.equals("list")) {
-            Ui.showTaskList(taskList);
+        if (command.equals("bye")) {
+            return Ui.renderExitMsg();
+        } else if (command.equals("list")) {
+            return Ui.renderTaskList(taskList);
         } else if (command.equals("find")) {
             String keyword = Parser.parseFindKeywordOrThrow(inp);
             TaskList found = taskList.findByKeyword(keyword);
-            Ui.showFoundTasksList(found);
+            return Ui.renderFoundTasksList(found);
         } else if (command.equals("delete")) {
             int index = Parser.parseIndexOrThrow(inp, taskList);
             Task task = taskList.remove(index);
-            Ui.showDeleteTask(task, taskList);
             Storage.saveTasksToFile(taskList);
+            return Ui.renderDeleteTask(task, taskList);
         } else if (command.equals("mark")) {
             int index = Parser.parseIndexOrThrow(inp, taskList);
             Task task = taskList.get(index);
             task.markDone();
-            Ui.showMarkTask(task);
             Storage.saveTasksToFile(taskList);
+            return Ui.renderMarkTask(task);
         } else if (command.equals("unmark")) {
             int index = Parser.parseIndexOrThrow(inp, taskList);
             Task task = taskList.get(index);
             task.markUndone();
-            Ui.showUnmarkTask(task);
             Storage.saveTasksToFile(taskList);
+            return Ui.renderUnmarkTask(task);
         } else if (isTaskCommand) {
             Task newTask = Parser.processTask(inp);
             taskList.add(newTask);
-            Ui.showNewTask(newTask, taskList);
             Storage.saveTasksToFile(taskList);
+            return Ui.renderNewTask(newTask, taskList);
         } else if (command.isEmpty()) {
             throw new IrisException("Please enter a command.");
         } else {
@@ -47,25 +51,17 @@ public class Iris {
         }
     }
 
-    public static void main(String[] args) {
+    public String init() {
         Storage.ensureDataFileExists();
-        Ui.showGreetMsg();
+        taskList = Storage.readTasksFromFile();
+        return Ui.renderGreetMsg();
+    }
 
-        Scanner sc = new Scanner(System.in);
-        TaskList taskList = Storage.readTasksFromFile();
-        while (true) {
-            String inp = sc.nextLine();
-            if (inp.equals("bye")) {
-                break;
-            }
-            try {
-                processInput(inp, taskList);
-            } catch (IrisException ie) {
-                Ui.showIrisException(ie);
-            }
+    public String getResponse(String input) {
+        try {
+            return processInput(input, taskList);
+        } catch (IrisException ie) {
+            return Ui.renderIrisException(ie);
         }
-
-        sc.close();
-        Ui.showExitMsg();
     }
 }
