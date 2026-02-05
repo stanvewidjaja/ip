@@ -36,7 +36,7 @@ public class Storage {
                 file.createNewFile();
             }
         } catch (IOException e) {
-            System.out.println("Error creating data file");
+            // System.out.println("Error creating data file");
         }
     }
 
@@ -91,7 +91,7 @@ public class Storage {
                     Task task = buildTaskFromLine(line);
                     taskList.add(task);
                 } catch (IrisException ie) {
-                    Ui.showIrisExceptionWithoutBox(ie);
+                    // System.out.println(ie.getMessage());
                 }
             }
         } catch (FileNotFoundException e) {
@@ -114,7 +114,7 @@ public class Storage {
                 writer.println(taskList.get(i).toFileString());
             }
         } catch (IOException e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+           //  System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
 }

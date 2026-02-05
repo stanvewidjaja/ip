@@ -13,8 +13,13 @@ public class Task {
         return isDone;
     }
 
-    public void markDone() { isDone = true; }
-    public void markUndone() { isDone = false; }
+    public void markDone() {
+        isDone = true;
+    }
+
+    public void markUndone() {
+        isDone = false;
+    }
 
     @Override
     public String toString() {

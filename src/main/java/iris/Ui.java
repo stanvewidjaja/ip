@@ -51,15 +51,6 @@ public class Ui {
         return "IrisException: " + ie.getMessage() + "\n";
     }
 
-    /**
-     * Prints an IrisException without the box.
-     *
-     * @param ie IrisException that is passed and caught
-     */
-    public static void showIrisExceptionWithoutBox(IrisException ie) {
-        System.out.println(ie.getMessage());
-    }
-
     public static String renderExitMsg() {
         return "Bye. Hope to see you again soon!";
     }
