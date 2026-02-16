@@ -11,7 +11,11 @@ public class Iris {
     private TaskList taskList;
 
     private static String processInput(String inp, TaskList taskList) throws IrisException {
+        assert taskList != null : "taskList must be initialized (call init() before getResponse())";
+
         String command = Parser.getCommand(inp);
+        assert command != null : "Parser.getCommand should not return null";
+
         boolean isTaskCommand = Parser.isTaskCreationCommand(command);
 
         if (command.equals("bye")) {
