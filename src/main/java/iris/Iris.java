@@ -61,6 +61,8 @@ public class Iris {
 
         if (command.equals("bye")) {
             return Ui.renderExitMsg();
+        } else if (command.equals("help")) {
+            return Ui.renderHelpMessage();
         } else if (command.equals("list")) {
             return Ui.renderTaskList(taskList);
         } else if (command.equals("find")) {
