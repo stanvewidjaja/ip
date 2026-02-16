@@ -43,7 +43,8 @@ public class Ui {
 
     public static String renderGreetMsg() {
         String greetMsg =
-                "Hello! I'm Iris!\nWhat can I do for you?\n";
+                "Hello! I'm Iris!\nWhat can I do for you?\n"
+                + "Type \"help\" to see available commands.\n";
         return greetMsg;
     }
 
@@ -66,4 +67,38 @@ public class Ui {
         }
         return foundMsg;
     }
+
+    public static String renderHelpMessage() {
+        return """
+            Here are the available commands:
+
+            list
+              Shows all tasks.
+
+            todo <description>
+              Adds a todo task.
+              Example: todo read book
+
+            deadline <description> /by <yyyy-mm-dd>
+              Adds a deadline task.
+              Example: deadline submit report /by 2026-02-20
+
+            event <description> /from <yyyy-mm-dd> /to <yyyy-mm-dd>
+              Adds an event task.
+              Example: event conference /from 2026-03-01 /to 2026-03-03
+
+            mark <index>      Marks a task
+            unmark <index>    Unmarks a task
+            delete <index>    Deletes a task
+            
+            find <keyword>    Searches tasks
+
+            help
+              Shows this help message.
+
+            bye
+              Exits the program.
+            """;
+    }
+
 }
