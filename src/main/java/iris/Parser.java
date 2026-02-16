@@ -137,6 +137,11 @@ public class Parser {
                 || command.equals(EVENT);
     }
 
+    public static boolean isMarkLikeCommand(String command) {
+        return command.equals(MARK)
+                || command.equals(UNMARK);
+    }
+
     /**
      * Extracts keyword from find commands. Returns
      * everything after the "find" clause.

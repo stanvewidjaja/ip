@@ -90,11 +90,12 @@ public class Storage {
                 try {
                     Task task = buildTaskFromLine(line);
                     taskList.add(task);
-                } catch (IrisException ie) {
-                    // System.out.println(ie.getMessage());
+                } catch (IrisException ignored) {
+                    // Ignore corrupted line, continue to next line
                 }
             }
         } catch (FileNotFoundException e) {
+            // Should not happen after ensureDataFileExists,
             // treat as empty list
         }
 
