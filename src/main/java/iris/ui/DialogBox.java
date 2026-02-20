@@ -35,6 +35,7 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
+        dialog.getStyleClass().add("dialog-text");
         displayPicture.setImage(img);
     }
 
@@ -49,11 +50,14 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.dialog.getStyleClass().add("user");
+        return db;
     }
 
     public static DialogBox getDukeDialog(String text, Image img) {
         var db = new DialogBox(text, img);
+        db.dialog.getStyleClass().add("bot");
         db.flip();
         return db;
     }

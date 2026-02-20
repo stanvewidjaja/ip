@@ -1,0 +1,27 @@
+.dialog-text {
+    -fx-font-size: 14px;
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 12;
+    -fx-wrap-text: true;
+}
+
+/* bot bubble */
+.dialog-text.bot {
+    -fx-background-color: white;
+    -fx-border-color: rgba(0,0,0,0.06);
+    -fx-border-radius: 12;
+}
+
+/* user bubble */
+.dialog-text.user {
+    -fx-background-color: #e8f0ff;
+    -fx-border-color: rgba(0,0,0,0.06);
+    -fx-border-radius: 12;
+}
+
+.scroll-pane {
+    -fx-background-color: #f6f7fb;
+}
+.scroll-pane .viewport {
+    -fx-background-color: #f6f7fb;
+}

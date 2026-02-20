@@ -55,7 +55,7 @@ Format: `list`
 Format:
 - `mark INDEX`  
   Example: `mark 2`
-- `unmark INDEX`
+- `unmark INDEX`  
   Example: `unmark 3`
 
 ### Delete
@@ -70,5 +70,10 @@ Format: `help`
 
 ## Constraints
 
-- Dates must follow the `YYYY-MM-DD` format.
-- `INDEX` refers to the number shown in the `list` command. In other words, it is 1-indexed.
+- Dates must follow the `YYYY-MM-DD` format
+- `INDEX` refers to the number shown in the `list` command (i.e. it's 1-indexed)
+
+## Acknowledgements
+
+- Robot image from [NDTV](https://www.ndtv.com/science/robots-might-be-able-to-sense-human-feelings-just-by-touching-skin-scientists-claim-7305948)
+- User image from [Freepik](https://www.freepik.com/free-photos-vectors/young-professional-engineer)
